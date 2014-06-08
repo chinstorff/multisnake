@@ -7,6 +7,6 @@ Game.Menu.prototype = {
 
     update: function () {
 	// upon some input:
-	// game.state.start('Play');
+	game.state.start('Play');
     }
 };

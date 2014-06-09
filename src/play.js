@@ -11,13 +11,14 @@ Game.Play.prototype = {
 	}
 
 	players = new Array(1);
-	players[0] = { color: '#f5f5f5', snake_head: [0, 0], snake_path: new Array(), direction: Directions.Right };
+	players[0] = { color: '#f5f5f5', snakeHead: [0, 0], snakePath: new Array(), direction: Directions.Right, addSquare: false };
 
-	players[0].snake_path.push(players[0].snake_head);
+	squares = game.add.group();
 
-	head = game.add.sprite(0, 0, 'square_green');
-	head.scale.setTo(18, 18);
-	this.moveTo(1, 1, head);
+	players[0].snakePath.push([0,0]);
+	players[0].snakePath.push([-1,0]);
+	players[0].snakePath.push([-2,0]);
+	players[0].snakePath.push([-3,0]);
 
 
 	// controls
@@ -29,38 +30,54 @@ Game.Play.prototype = {
 
 	time = game.time.now;
 	turnCount = 0;
+
+	this.paint();
+  
     },
 
     update: function () {
-	if (Math.floor((game.time.now - time) / 700) > turnCount) {
+	if (Math.floor((game.time.now - time) / 200) > turnCount) {
 	    this.advanceTurn();
-	    console.log(game.time.now);
+	    console.log(players[0].snakePath);
+
+	    this.paint();
 	}
+
     },
 
     advanceTurn: function () {
-	this.move(players[0].direction, head);
+	this.move(players[0]);
+
 	turnCount++;
     },
 
-    move: function (dir, obj) {
-	switch (dir) {
+    move: function (player) {
+	if (player.addSquare) {
+	    player.addSquare = false;
+	}
+	else {
+	    player.snakePath.pop();
+	}
+
+	switch (player.direction) {
 	case Directions.Up:
-	    obj.y -= 20;
+	    player.snakeHead[1] -= 1;
 	    break;
 	case Directions.Down:
-	    obj.y += 20;
+	    player.snakeHead[1] += 1;
 	    break;
 	case Directions.Left:
-	    obj.x -= 20;
+	    player.snakeHead[0] -= 1;
 	    break;
 	case Directions.Right:
-	    obj.x += 20;
+	    player.snakeHead[0] += 1;
 	    break;
 	}
+
+	player.snakePath.unshift([player.snakeHead[0], player.snakeHead[1]]);
     },
 
-    moveTo: function (x, y, obj) {
+    setLoc: function (x, y, obj) {
 	obj.x = this.gridLoc(x);
 	obj.y = this.gridLoc(y);
     },
@@ -71,5 +88,29 @@ Game.Play.prototype = {
 
     gridLoc: function (pre) {
 	return 20 * pre + 1;
+    },
+
+    paint: function () {
+	console.log('inside paint()');
+
+	squares.removeAll();
+
+	for (var i = 0; i < players.length; i++) {
+	    console.log('player ' + i);
+	    this.paintPlayer(players[i]);
+	}
+    },
+
+    paintPlayer: function (player) {
+	console.log('inside paintPlayer()');
+	for (var i = 0; i < player.snakePath.length; i++) {
+	    this.createSquare(player.snakePath[i][0], player.snakePath[i][1], player.color);
+	}
+    },
+
+    createSquare: function (x, y, color) {
+	console.log('inside createSquare()');
+	square = squares.create(this.gridLoc(x), this.gridLoc(y), 'square_green');
+	square.scale.setTo(18, 18);
     }
 };

@@ -11,7 +11,8 @@ Game.Play.prototype = {
 	}
 
 	players = new Array(1);
-	players[0] = { color: '#f5f5f5', snakeHead: [0, 0], snakePath: new Array(), direction: Directions.Right, addSquare: false };
+	players[0] = { color: 'pink', snakeHead: [0, 0], snakePath: new Array(), currentDirection: Directions.Right, nextDirection: Directions.Right, addSquare: false, alive: true, keys: { } };
+	players[1] = { color: 'green', snakeHead: [14, 14], snakePath: new Array(), currentDirection: Directions.Left, nextDirection: Directions.Left, addSquare: false, alive: true, keys: { } };
 
 	squares = game.add.group();
 
@@ -20,13 +21,15 @@ Game.Play.prototype = {
 	players[0].snakePath.push([-2,0]);
 	players[0].snakePath.push([-3,0]);
 
+	players[1].snakePath.push([14,14]);
+	players[1].snakePath.push([15,14]);
+	players[1].snakePath.push([16,14]);
+	players[1].snakePath.push([17,14]);
+
 
 	// controls
-	cursors = game.input.keyboard.createCursorKeys();
-	cursors.up.onDown.add(function () { players[0].direction = Directions.Up }, this);
-	cursors.down.onDown.add(function () { players[0].direction = Directions.Down }, this);
-	cursors.left.onDown.add(function () { players[0].direction = Directions.Left }, this);
-	cursors.right.onDown.add(function () { players[0].direction = Directions.Right }, this);
+	this.addControls(Phaser.Keyboard.W, Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D, players[0]);
+	this.addControls(Phaser.Keyboard.UP, Phaser.Keyboard.DOWN, Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT, players[1]);
 
 	time = game.time.now;
 	turnCount = 0;
@@ -36,17 +39,22 @@ Game.Play.prototype = {
     },
 
     update: function () {
+	for (var i = 0; i < players.length; i++) {
+	    this.updateControls(players[i]);
+	}
+
 	if (Math.floor((game.time.now - time) / 200) > turnCount) {
 	    this.advanceTurn();
 	    console.log(players[0].snakePath);
 
 	    this.paint();
 	}
-
     },
 
     advanceTurn: function () {
-	this.move(players[0]);
+	for (var i = 0; i < players.length; i++) {
+	    this.move(players[i]);
+	}
 
 	turnCount++;
     },
@@ -59,7 +67,7 @@ Game.Play.prototype = {
 	    player.snakePath.pop();
 	}
 
-	switch (player.direction) {
+	switch (player.nextDirection) {
 	case Directions.Up:
 	    player.snakeHead[1] -= 1;
 	    break;
@@ -74,7 +82,10 @@ Game.Play.prototype = {
 	    break;
 	}
 
+//	if (!this.isEmpty(player.snakeHead));
+
 	player.snakePath.unshift([player.snakeHead[0], player.snakeHead[1]]);
+	player.currentDirection = player.nextDirection;
     },
 
     setLoc: function (x, y, obj) {
@@ -91,26 +102,45 @@ Game.Play.prototype = {
     },
 
     paint: function () {
-	console.log('inside paint()');
-
 	squares.removeAll();
 
 	for (var i = 0; i < players.length; i++) {
-	    console.log('player ' + i);
-	    this.paintPlayer(players[i]);
+	    if (players[i].alive) {
+		this.paintPlayer(players[i]);
+	    }
 	}
     },
 
     paintPlayer: function (player) {
-	console.log('inside paintPlayer()');
 	for (var i = 0; i < player.snakePath.length; i++) {
 	    this.createSquare(player.snakePath[i][0], player.snakePath[i][1], player.color);
 	}
     },
 
     createSquare: function (x, y, color) {
-	console.log('inside createSquare()');
-	square = squares.create(this.gridLoc(x), this.gridLoc(y), 'square_green');
+	square = squares.create(this.gridLoc(x), this.gridLoc(y), color);
 	square.scale.setTo(18, 18);
+    },
+
+    addControls: function (up, down, left, right, player) {
+	player.keys.up = game.input.keyboard.addKey(up);
+	player.keys.down = game.input.keyboard.addKey(down);
+	player.keys.left = game.input.keyboard.addKey(left);
+	player.keys.right = game.input.keyboard.addKey(right);
+    },
+
+    updateControls: function (player) {
+	if (player.keys.up.isDown && (player.currentDirection != Directions.Down)) {
+	    player.nextDirection = Directions.Up;
+	}
+	else if (player.keys.down.isDown && (player.currentDirection != Directions.Up)) {
+	    player.nextDirection = Directions.Down;
+	}
+	else if (player.keys.left.isDown && (player.currentDirection != Directions.Right)) {
+	    player.nextDirection = Directions.Left;
+	}
+	else if (player.keys.right.isDown && (player.currentDirection != Directions.Left)) {
+	    player.nextDirection = Directions.Right;
+	}
     }
 };

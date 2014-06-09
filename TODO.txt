@@ -1,0 +1,9 @@
+- snake death
+- food generation
+- player selection
+
+- loading screen
+- menu screen
+- end screen
+
+- AI?

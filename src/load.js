@@ -12,6 +12,8 @@ Game.Load.prototype = {
 	game.load.image('purple', 'assets/img/purple.png');
 	game.load.image('pink', 'assets/img/pink.png');
 	game.load.image('lime', 'assets/img/lime.png');
+
+	game.load.image('food', 'assets/img/food-white.png');
     },
 
     create: function () {

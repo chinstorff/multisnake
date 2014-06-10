@@ -12,20 +12,21 @@ Game.Play.prototype = {
 
 	players = new Array(1);
 	players[0] = { color: 'pink', snakeHead: [0, 0], snakePath: new Array(), currentDirection: Directions.Right, nextDirection: Directions.Right, addSquare: false, alive: true, keys: { } };
-	players[1] = { color: 'green', snakeHead: [14, 14], snakePath: new Array(), currentDirection: Directions.Left, nextDirection: Directions.Left, addSquare: false, alive: true, keys: { } };
+	players[1] = { color: 'green', snakeHead: [14, 14], snakePath: new Array(), currentDirection: Directions.Left, nextDirection: Directions.Left, addSquare: false, alive: false, keys: { } };
+
+	foodArray = new Array();
 
 	squares = game.add.group();
 
 	players[0].snakePath.push([0,0]);
-	players[0].snakePath.push([-1,0]);
-	players[0].snakePath.push([-2,0]);
-	players[0].snakePath.push([-3,0]);
 
 	players[1].snakePath.push([14,14]);
 	players[1].snakePath.push([15,14]);
 	players[1].snakePath.push([16,14]);
 	players[1].snakePath.push([17,14]);
 
+	foods = game.add.group();
+	food = foods.create(this.gridLoc(5), this.gridLoc(3), 'food');
 
 	// controls
 	this.addControls(Phaser.Keyboard.W, Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D, players[0]);
@@ -82,7 +83,12 @@ Game.Play.prototype = {
 	    break;
 	}
 
-//	if (!this.isEmpty(player.snakeHead));
+	if ( false/* square contains part of any snake */) {
+
+	}
+	else if ( false /* there's food?! */) {
+
+	}
 
 	player.snakePath.unshift([player.snakeHead[0], player.snakeHead[1]]);
 	player.currentDirection = player.nextDirection;

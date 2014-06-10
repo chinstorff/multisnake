@@ -4,7 +4,7 @@ Game = {};
 var w = 300;
 var h = 400;
 
-var grid;
+var grid = [];
 var columns = 10;
 var rows = 10;
 

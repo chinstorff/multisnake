@@ -5,8 +5,8 @@ var w = 300;
 var h = 400;
 
 var grid = [];
-var columns = 10;
-var rows = 10;
+var columns = 13;
+var rows = 13;
 
 var players;
 

@@ -13,7 +13,7 @@ Game.Load.prototype = {
 	game.load.image('pink', 'assets/img/pink.png');
 	game.load.image('lime', 'assets/img/lime.png');
 	
-	game.load.image('food', 'assets/img/food.png');
+//	game.load.image('food', 'assets/img/food-.png');
 
 	game.load.image('keys-wasd', 'assets/img/keys-wasd.png');
 	game.load.image('keys-arrows', 'assets/img/keys-arrows.png');

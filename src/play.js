@@ -56,6 +56,10 @@ Game.Play.prototype = {
 	    this.move(players[i]);
 	}
 
+	if (this.allDead()) {
+	    this.endGame();
+	}
+	
 	turnCount++;
     },
 
@@ -107,6 +111,17 @@ Game.Play.prototype = {
 
     gridLoc: function (pre) {
 	return 20 * pre + 11;
+    },
+
+    allDead: function () {
+	anyAlive = false;
+	for (var i = 0; i < players.length; i++) {
+	    if (players[i].alive) {
+		anyAlive = true;
+	    }
+	}
+
+	return !anyAlive;
     },
 
     paint: function () {
@@ -208,5 +223,9 @@ Game.Play.prototype = {
 	else if (player.keys.right.isDown && (player.currentDirection != Directions.Left)) {
 	    player.nextDirection = Directions.Right;
 	}
+    },
+
+    endGame: function () {
+	game.state.start('Menu');
     }
 };

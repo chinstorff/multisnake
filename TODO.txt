@@ -1,9 +1,6 @@
-- snake death
-- food generation
+- make foods unique to players
 - player selection
 
 - loading screen
 - menu screen
 - end screen
-
-- AI?

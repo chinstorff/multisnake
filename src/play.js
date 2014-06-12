@@ -7,25 +7,15 @@ var scoreText = [];
 
 Game.Play.prototype = {
     create: function () {
-	players = new Array(1);
-	players[0] = { color: 'purple', snakeHead: [3, rows], lastSnakeHead: [], snakePath: new Array(), currentDirection: Directions.Up, nextDirection: Directions.Up, foodArray: [], addSquare: false, alive: true, shouldDie: false, keys: { }, score: 0 };
-	players[1] = { color: 'green', snakeHead: [columns - 3, rows], lastSnakeHead: [], snakePath: new Array(), currentDirection: Directions.Up, nextDirection: Directions.Up, foodArray: [], addSquare: false, alive: true, shouldDie: false, keys: { }, score: 0 };
+	this.createPlayer(0, 3, rows, Directions.Up);
+	this.createPlayer(1, columns - 3, rows, Directions.Up);
+
+	this.createBackground();
 
 	squares = game.add.group();
 
 	this.generateFood(players[0]);
 	this.generateFood(players[1]);
-
-	background = game.add.sprite(0, 0, 'background');
-	bgLeft = game.add.sprite(10, 300, 'square-' + players[0].color);
-	bgRight = game.add.sprite(155, 300, 'square-' + players[1].color);
-	bgLeft.scale.setTo(135 / 18, 90 / 18);
-	bgRight.scale.setTo(135 / 18, 90 / 18);
-
-	keysWasd = game.add.sprite(145, 390, 'keys-wasd');
-	keysWasd.anchor.setTo(1, 1);
-	keysArrows = game.add.sprite(155, 390, 'keys-arrows');
-	keysArrows.anchor.setTo(0, 1);
 
 	// controls
 	this.addControls(Phaser.Keyboard.W, Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D, players[0]);
@@ -133,6 +123,46 @@ Game.Play.prototype = {
 	if (!this.safeForSnake(player.snakeHead[0], player.snakeHead[1])) {
 	    player.shouldDie = true;
 	}
+    },
+
+    createPlayer: function (id, startX, startY, direction) {
+	players[id].snakeHead = [startX, startY];
+	players[id].lastSnakeHead = [];
+	players[id].snakePath = [];
+
+	players[id].currentDirection = direction;
+	players[id].nextDirection = direction;
+
+	players[id].foodArray = [];
+
+	players[id].addSquare = false;
+	players[id].alive = true;
+	players[id].shouldDie = false;
+	players[id].keys = {};
+	players[id].score = 0;
+    },
+
+    createBackground: function () {
+	background = game.add.sprite(0, 0, 'background');
+	bgLeft = game.add.sprite(10, 300, 'square-' + players[0].color);
+	bgRight = game.add.sprite(155, 300, 'square-' + players[1].color);
+	bgLeft.scale.setTo(135 / 18, 90 / 18);
+	bgRight.scale.setTo(135 / 18, 90 / 18);
+
+	keysWasd = game.add.sprite(145, 390, 'keys-wasd');
+	keysWasd.anchor.setTo(1, 1);
+	keysArrows = game.add.sprite(155, 390, 'keys-arrows');
+	keysArrows.anchor.setTo(0, 1);
+    },
+
+    updateBackground: function () {
+	bgLeft = game.add.sprite(10, 300, 'square-' + players[0].color);
+	bgRight = game.add.sprite(155, 300, 'square-' + players[1].color);
+	bgLeft.scale.setTo(135 / 18, 90 / 18);
+	bgRight.scale.setTo(135 / 18, 90 / 18);
+
+	keysWasd.bringToTop();
+	keysArrows.bringToTop();
     },
 
     setLoc: function (x, y, obj) {

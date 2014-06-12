@@ -8,9 +8,11 @@ var grid = [];
 var columns = 13;
 var rows = 13;
 
-var players;
+var players = [{}, {}];
 
 var Directions = { Up: 0, Right: 1, Down: 2, Left: 3 };
+
+var colors = ['blue', 'green', 'lime', 'purple', 'orange', 'pink'];
 
 Game.Boot = function (game) { };
 

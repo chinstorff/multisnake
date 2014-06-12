@@ -3,12 +3,13 @@ Game.Play = function (game) { };
 var time;
 var turnCount;
 var foodArray;
+var scoreText = [];
 
 Game.Play.prototype = {
     create: function () {
 	players = new Array(1);
-	players[0] = { color: 'purple', snakeHead: [3, rows], lastSnakeHead: [], snakePath: new Array(), currentDirection: Directions.Up, nextDirection: Directions.Up, foodArray: [], addSquare: false, alive: true, shouldDie: false, keys: { } };
-	players[1] = { color: 'green', snakeHead: [columns - 3, rows], lastSnakeHead: [], snakePath: new Array(), currentDirection: Directions.Up, nextDirection: Directions.Up, foodArray: [], addSquare: false, alive: true, shouldDie: false, keys: { } };
+	players[0] = { color: 'purple', snakeHead: [3, rows], lastSnakeHead: [], snakePath: new Array(), currentDirection: Directions.Up, nextDirection: Directions.Up, foodArray: [], addSquare: false, alive: true, shouldDie: false, keys: { }, score: 0 };
+	players[1] = { color: 'green', snakeHead: [columns - 3, rows], lastSnakeHead: [], snakePath: new Array(), currentDirection: Directions.Up, nextDirection: Directions.Up, foodArray: [], addSquare: false, alive: true, shouldDie: false, keys: { }, score: 0 };
 
 	squares = game.add.group();
 
@@ -33,6 +34,10 @@ Game.Play.prototype = {
 	time = game.time.now;
 	turnCount = 0;
 	
+	scoreText[0] = game.add.text(20, 300, players[0].score.toString(), { font: '50px Arial bold', fill: '#888' });
+	scoreText[1] = game.add.text(280, 300, players[1].score.toString(), { font: '50px Arial bold', fill: '#888' });
+	scoreText[1].anchor.setTo(1, 0);
+
 	this.paint();				
     },
 
@@ -97,12 +102,16 @@ Game.Play.prototype = {
 		if (players[i] == player) {
 		    player.addSquare = true;
 		}
+		else {
+		    player.score -= 5;
+		}
 		this.generateFood(players[i]);
 	    }
 	}
 	
 	if (player.addSquare) {
-	    player.addSquare = false
+	    player.addSquare = false;
+	    player.score += 10;
 	}
 	else {
 	    player.snakePath.pop();
@@ -155,6 +164,10 @@ Game.Play.prototype = {
 
 	for (var i = 0; i < players.length; i++) {
 	    this.paintPlayer(players[i]);
+	}
+
+	for (var i = 0; i < scoreText.length; i++) {
+	    scoreText[i].text = players[i].score;
 	}
     },
 

@@ -7,11 +7,8 @@ var foodArray;
 Game.Play.prototype = {
     create: function () {
 	players = new Array(1);
-	players[0] = { color: 'purple', snakeHead: [0, 0], snakePath: new Array(), currentDirection: Directions.Down, nextDirection: Directions.Down, foodArray: [], addSquare: false, alive: true, shouldDie: false, keys: { } };
-	players[1] = { color: 'green', snakeHead: [columns, 0], snakePath: new Array(), currentDirection: Directions.Down, nextDirection: Directions.Down, foodArray: [], addSquare: false, alive: true, shouldDie: false, keys: { } };
-
-	players[0].snakePath.push([0, 0]);
-	players[1].snakePath.push([columns, 0]);
+	players[0] = { color: 'purple', snakeHead: [0, 0], lastSnakeHead: [0, -1], snakePath: new Array(), currentDirection: Directions.Down, nextDirection: Directions.Down, foodArray: [], addSquare: false, alive: true, shouldDie: false, keys: { } };
+	players[1] = { color: 'green', snakeHead: [columns, 0], lastSnakeHead: [columns, -1], snakePath: new Array(), currentDirection: Directions.Down, nextDirection: Directions.Down, foodArray: [], addSquare: false, alive: true, shouldDie: false, keys: { } };
 
 	squares = game.add.group();
 
@@ -56,6 +53,9 @@ Game.Play.prototype = {
 	    this.move(players[i]);
 	}
 	for (var i = 0; i < players.length; i++) {
+	    this.postMove(players[i], i);
+	}
+	for (var i = 0; i < players.length; i++) {
 	    if (players[i].shouldDie) {
 		players[i].alive = false;
 	    }
@@ -69,11 +69,9 @@ Game.Play.prototype = {
     },
 
     move: function (player) {
-	for (var i = 0; i < players.length; i++) {
-	    if (players[i].snakeHead[0] === player.snakeHead[0] && players[i].snakeHead[1] === player.snakeHead[1] && players[i] !== player) {
-		player.shouldDie = true;
-	    }
-	}
+	player.snakePath.unshift([player.snakeHead[0], player.snakeHead[1]]);
+
+	player.lastSnakeHead = [player.snakeHead[0], player.snakeHead[1]];
 
 	switch (player.nextDirection) {
 	case Directions.Up:
@@ -90,31 +88,42 @@ Game.Play.prototype = {
 	    break;
 	}
 
+	player.currentDirection = player.nextDirection;
+
+	for (var i = 0; i < players.length; i++) {
+	    var foodIndex = this.arrayIndexOf(player.snakeHead, players[i].foodArray);
+	    if (foodIndex > -1) {
+		players[i].foodArray.splice(foodIndex, 1);
+		if (players[i] == player) {
+		    player.addSquare = true;
+		}
+		this.generateFood(players[i]);
+	    }
+	}
+	
+	if (player.addSquare) {
+	    player.addSquare = false
+	}
+	else {
+	    player.snakePath.pop();
+	}
+    },
+
+    postMove: function (player) {
+	for (var i = 0; i < players.length; i++) {
+	    if (players[i].snakeHead[0] === player.snakeHead[0] && players[i].snakeHead[1] === player.snakeHead[1] && players[i] !== player) {
+		players[i].shouldDie = true;
+		player.shouldDie = true;
+	    }
+	    else if (players[i].lastSnakeHead[0] === player.snakeHead[0] && players[i].lastSnakeHead[1] === player.snakeHead[1] && players[i].snakeHead[0] === player.lastSnakeHead[0] && players[i].snakeHead[1] === player.lastSnakeHead[1] ) {
+		players[i].shouldDie = true;
+		player.shouldDie = true;
+	    }
+	}
+
 	if (!this.safeForSnake(player.snakeHead[0], player.snakeHead[1])) {
 	    player.shouldDie = true;
 	}
-	else {
-	    for (var i = 0; i < players.length; i++) {
-		var foodIndex = this.arrayIndexOf(player.snakeHead, players[i].foodArray);
-		if (foodIndex > -1) {
-		    players[i].foodArray.splice(foodIndex, 1);
-		    if (players[i] == player) {
-			player.addSquare = true;
-		    }
-		    this.generateFood(players[i]);
-		}
-	    }
-
-	    if (player.addSquare) {
-		player.addSquare = false
-	    }
-	    else {
-		player.snakePath.pop();
-	    }
-	}
-
-	player.snakePath.unshift([player.snakeHead[0], player.snakeHead[1]]);
-	player.currentDirection = player.nextDirection;
     },
 
     setLoc: function (x, y, obj) {
@@ -151,6 +160,7 @@ Game.Play.prototype = {
 
     paintPlayer: function (player) {
 	if (player.alive) {
+	    this.createSquare(player.snakeHead[0], player.snakeHead[1], 'square-' + player.color);
 	    this.paintArr(player.snakePath, 'square-' + player.color);
 	}
 	this.paintArr(player.foodArray, 'food-' + player.color);
@@ -185,8 +195,12 @@ Game.Play.prototype = {
 	    return false;
 	}
 
-	if (this.squareAt(x, y) == 'empty' || this.squareAt(x, y).substring(0, 4) == 'food') {
+	if (this.squareAt(x, y) == 'empty' || this.squareAt(x, y).substring(0, 4) == 'food') {	   
 	    return true;
+	}
+
+	if (this.squareAt(x, y).substring(0, 9) == 'snakePath') {
+	    return false;
 	}
 
 	return false;
@@ -199,7 +213,7 @@ Game.Play.prototype = {
 	    }
 
 	    if (this.arrayIndexOf([x,y], players[i].snakePath) > -1 && players[i].alive) {
-		return 'player' + i;
+		return 'snakePath' + i;
 	    }
 	}
 

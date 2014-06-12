@@ -7,11 +7,11 @@ var foodArray;
 Game.Play.prototype = {
     create: function () {
 	players = new Array(1);
-	players[0] = { color: 'purple', snakeHead: [0, 0], snakePath: new Array(), currentDirection: Directions.Right, nextDirection: Directions.Right, foodArray: [], addSquare: false, alive: true, keys: { } };
-	players[1] = { color: 'green', snakeHead: [columns, rows], snakePath: new Array(), currentDirection: Directions.Left, nextDirection: Directions.Left, foodArray: [], addSquare: false, alive: true, keys: { } };
+	players[0] = { color: 'purple', snakeHead: [0, 0], snakePath: new Array(), currentDirection: Directions.Down, nextDirection: Directions.Down, foodArray: [], addSquare: false, alive: true, shouldDie: false, keys: { } };
+	players[1] = { color: 'green', snakeHead: [columns, 0], snakePath: new Array(), currentDirection: Directions.Down, nextDirection: Directions.Down, foodArray: [], addSquare: false, alive: true, shouldDie: false, keys: { } };
 
 	players[0].snakePath.push([0, 0]);
-	players[1].snakePath.push([columns, rows]);
+	players[1].snakePath.push([columns, 0]);
 
 	squares = game.add.group();
 
@@ -55,6 +55,11 @@ Game.Play.prototype = {
 	for (var i = 0; i < players.length; i++) {
 	    this.move(players[i]);
 	}
+	for (var i = 0; i < players.length; i++) {
+	    if (players[i].shouldDie) {
+		players[i].alive = false;
+	    }
+	}
 
 	if (this.allDead()) {
 	    this.endGame();
@@ -64,6 +69,12 @@ Game.Play.prototype = {
     },
 
     move: function (player) {
+	for (var i = 0; i < players.length; i++) {
+	    if (players[i].snakeHead[0] === player.snakeHead[0] && players[i].snakeHead[1] === player.snakeHead[1] && players[i] !== player) {
+		player.shouldDie = true;
+	    }
+	}
+
 	switch (player.nextDirection) {
 	case Directions.Up:
 	    player.snakeHead[1] -= 1;
@@ -80,7 +91,7 @@ Game.Play.prototype = {
 	}
 
 	if (!this.safeForSnake(player.snakeHead[0], player.snakeHead[1])) {
-	    player.alive = false;
+	    player.shouldDie = true;
 	}
 	else {
 	    for (var i = 0; i < players.length; i++) {
@@ -96,13 +107,13 @@ Game.Play.prototype = {
 		    this.generateFood(players[i]);
 		}
 	    }
-	}
 
-	if (player.addSquare) {
-	    player.addSquare = false
-	}
-	else {
-	    player.snakePath.pop();
+	    if (player.addSquare) {
+		player.addSquare = false
+	    }
+	    else {
+		player.snakePath.pop();
+	    }
 	}
 
 	player.snakePath.unshift([player.snakeHead[0], player.snakeHead[1]]);
@@ -181,7 +192,6 @@ Game.Play.prototype = {
 	    return true;
 	}
 
-	console.log(this.squareAt(x, y));
 	return false;
     },
 
@@ -191,7 +201,7 @@ Game.Play.prototype = {
 		return 'food' + i;
 	    }
 
-	    if (this.arrayIndexOf([x,y], players[i].snakePath) > -1) {
+	    if (this.arrayIndexOf([x,y], players[i].snakePath) > -1 && players[i].alive) {
 		return 'player' + i;
 	    }
 	}

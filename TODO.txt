@@ -1,5 +1,4 @@
 - color selection
-- make head to head collisions kill both snakes
 - score
 
 - loading screen

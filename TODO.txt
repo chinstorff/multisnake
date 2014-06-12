@@ -4,3 +4,6 @@
 - loading screen
 - menu screen
 - end screen
+
+- music
+- sound effects

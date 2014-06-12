@@ -1,4 +1,3 @@
-- make foods unique to players
 - player selection
 - make head to head collisions kill both snakes
 

@@ -7,20 +7,20 @@ var foodArray;
 Game.Play.prototype = {
     create: function () {
 	players = new Array(1);
-	players[0] = { color: 'purple', snakeHead: [0, 0], snakePath: new Array(), currentDirection: Directions.Right, nextDirection: Directions.Right, addSquare: false, alive: true, keys: { } };
-	players[1] = { color: 'green', snakeHead: [columns, rows], snakePath: new Array(), currentDirection: Directions.Left, nextDirection: Directions.Left, addSquare: false, alive: true, keys: { } };
+	players[0] = { color: 'purple', snakeHead: [0, 0], snakePath: new Array(), currentDirection: Directions.Right, nextDirection: Directions.Right, foodArray: [], addSquare: false, alive: true, keys: { } };
+	players[1] = { color: 'green', snakeHead: [columns, rows], snakePath: new Array(), currentDirection: Directions.Left, nextDirection: Directions.Left, foodArray: [], addSquare: false, alive: true, keys: { } };
 
 	players[0].snakePath.push([0, 0]);
 	players[1].snakePath.push([columns, rows]);
 
 	squares = game.add.group();
 
-	foodArray = [];
-	this.generateFood();
+	this.generateFood(players[0]);
+	this.generateFood(players[1]);
 
 	background = game.add.sprite(0, 0, 'background');
-	bgLeft = game.add.sprite(10, 300, players[0].color);
-	bgRight = game.add.sprite(155, 300, players[1].color);
+	bgLeft = game.add.sprite(10, 300, 'square-' + players[0].color);
+	bgRight = game.add.sprite(155, 300, 'square-' + players[1].color);
 	bgLeft.scale.setTo(135 / 18, 90 / 18);
 	bgRight.scale.setTo(135 / 18, 90 / 18);
 
@@ -79,18 +79,27 @@ Game.Play.prototype = {
 	    break;
 	}
 
-	var foodIndex = this.arrayIndexOf(player.snakeHead, foodArray);
 	if (!this.safeForSnake(player.snakeHead[0], player.snakeHead[1])) {
 	    player.alive = false;
 	}
-	else if ( foodIndex > -1 ) {
-	    foodArray.splice(foodIndex, 1);
-	    player.addSquare = true;
-	    this.generateFood();
+	else {
+	    for (var i = 0; i < players.length; i++) {
+		var foodIndex = this.arrayIndexOf(player.snakeHead, players[i].foodArray);
+		if (foodIndex > -1) {
+		    players[i].foodArray.splice(foodIndex, 1);
+		    if (players[i] == player) {
+			player.addSquare = true;
+		    }
+		    else if (player.snakePath.length > 1) {
+			player.snakePath.pop();
+		    }
+		    this.generateFood(players[i]);
+		}
+	    }
 	}
 
 	if (player.addSquare) {
-	    player.addSquare = false;
+	    player.addSquare = false
 	}
 	else {
 	    player.snakePath.pop();
@@ -128,50 +137,47 @@ Game.Play.prototype = {
 	squares.removeAll();
 
 	for (var i = 0; i < players.length; i++) {
-	    if (players[i].alive) {
-		this.paintPlayer(players[i]);
-	    }
+	    this.paintPlayer(players[i]);
 	}
-	
-	this.paintArr(foodArray, 'food');
     },
 
     paintPlayer: function (player) {
-	this.paintArr(player.snakePath, player.color);
+	if (player.alive) {
+	    this.paintArr(player.snakePath, 'square-' + player.color);
+	}
+	this.paintArr(player.foodArray, 'food-' + player.color);
     },
 
-    paintArr: function (arr, color) {
+    paintArr: function (arr, image) {
 	for (var i = 0; i < arr.length; i++) {
-	    this.createSquare(arr[i][0], arr[i][1], color);
+	    this.createSquare(arr[i][0], arr[i][1], image);
 	}
     },
 
-    createSquare: function (x, y, color) {
-	square = squares.create(this.gridLoc(x), this.gridLoc(y), color);
+    createSquare: function (x, y, image) {
+	square = squares.create(this.gridLoc(x), this.gridLoc(y), image);
     },
 
-    generateFood: function () {
+    generateFood: function (player) {
 	var success = false;
 	while (!success) {
 	    x = Math.floor(Math.random() * columns);
 	    y = Math.floor(Math.random() * rows);
 
 	    if (this.squareAt(x, y) == 'empty') {
-		this.createSquare(x, y, 'food');
-		foodArray.push([x,y]);
+		this.createSquare(x, y, 'food-' + player.color);
+		player.foodArray.push([x,y]);
 		success = true;
 	    }
 	}
     },
 
     safeForSnake: function (x, y) {
-	if (x < 0 || x > columns || y < 0 || y > rows) {
-	    console.log('out of bounds: ' + x + ', ' + y);
-	    
+	if (x < 0 || x > columns || y < 0 || y > rows) {	    
 	    return false;
 	}
 
-	if (this.squareAt(x, y) == 'empty' || this.squareAt(x, y) == 'food') {
+	if (this.squareAt(x, y) == 'empty' || this.squareAt(x, y).substring(0, 4) == 'food') {
 	    return true;
 	}
 
@@ -180,11 +186,11 @@ Game.Play.prototype = {
     },
 
     squareAt: function (x, y) {
-	if (this.arrayIndexOf([x,y], foodArray) > -1) {
-	    return 'food';
-	}
-	
 	for (var i = 0; i < players.length; i++) {
+	    if (this.arrayIndexOf([x,y], players[i].foodArray) > -1) {
+		return 'food' + i;
+	    }
+
 	    if (this.arrayIndexOf([x,y], players[i].snakePath) > -1) {
 		return 'player' + i;
 	    }

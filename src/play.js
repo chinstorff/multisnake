@@ -101,9 +101,6 @@ Game.Play.prototype = {
 		    if (players[i] == player) {
 			player.addSquare = true;
 		    }
-		    else if (player.snakePath.length > 1) {
-			player.snakePath.pop();
-		    }
 		    this.generateFood(players[i]);
 		}
 	    }

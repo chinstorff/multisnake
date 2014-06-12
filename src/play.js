@@ -7,8 +7,8 @@ var foodArray;
 Game.Play.prototype = {
     create: function () {
 	players = new Array(1);
-	players[0] = { color: 'purple', snakeHead: [0, 0], lastSnakeHead: [0, -1], snakePath: new Array(), currentDirection: Directions.Down, nextDirection: Directions.Down, foodArray: [], addSquare: false, alive: true, shouldDie: false, keys: { } };
-	players[1] = { color: 'green', snakeHead: [columns, 0], lastSnakeHead: [columns, -1], snakePath: new Array(), currentDirection: Directions.Down, nextDirection: Directions.Down, foodArray: [], addSquare: false, alive: true, shouldDie: false, keys: { } };
+	players[0] = { color: 'purple', snakeHead: [3, rows], lastSnakeHead: [], snakePath: new Array(), currentDirection: Directions.Up, nextDirection: Directions.Up, foodArray: [], addSquare: false, alive: true, shouldDie: false, keys: { } };
+	players[1] = { color: 'green', snakeHead: [columns - 3, rows], lastSnakeHead: [], snakePath: new Array(), currentDirection: Directions.Up, nextDirection: Directions.Up, foodArray: [], addSquare: false, alive: true, shouldDie: false, keys: { } };
 
 	squares = game.add.group();
 

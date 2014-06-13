@@ -7,6 +7,10 @@ var scoreText = [];
 
 Game.Play.prototype = {
     create: function () {
+	if (audio) {
+	    music.play('', 0, 0.25, true, true);
+	}
+
 	this.createPlayer(0, 3, rows, Directions.Up);
 	this.createPlayer(1, columns - 3, rows, Directions.Up);
 
@@ -20,6 +24,7 @@ Game.Play.prototype = {
 	// controls
 	this.addControls(Phaser.Keyboard.W, Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D, players[0]);
 	this.addControls(Phaser.Keyboard.UP, Phaser.Keyboard.DOWN, Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT, players[1]);
+	this.addMute();
 
 	time = game.time.now;
 	turnCount = 0;
@@ -55,14 +60,22 @@ Game.Play.prototype = {
 
     advanceTurn: function () {
 	for (var i = 0; i < players.length; i++) {
-	    this.move(players[i]);
+	    if (players[i].alive) {
+		this.move(players[i]);
+	    }
 	}
 	for (var i = 0; i < players.length; i++) {
-	    this.postMove(players[i], i);
+	    if (players[i].alive) {
+		this.postMove(players[i], i);
+	    }
 	}
 	for (var i = 0; i < players.length; i++) {
 	    if (players[i].shouldDie) {
 		players[i].alive = false;
+		players[i].shouldDie = false;
+		if (audio) {
+		    sfx.die.play('', 0, 0.2, false, true);
+		}
 	    }
 	}
 
@@ -71,9 +84,9 @@ Game.Play.prototype = {
 
     move: function (player) {
 	player.snakePath.unshift([player.snakeHead[0], player.snakeHead[1]]);
-
+	
 	player.lastSnakeHead = [player.snakeHead[0], player.snakeHead[1]];
-
+	
 	switch (player.nextDirection) {
 	case Directions.Up:
 	    player.snakeHead[1] -= 1;
@@ -88,18 +101,24 @@ Game.Play.prototype = {
 	    player.snakeHead[0] += 1;
 	    break;
 	}
-
+	
 	player.currentDirection = player.nextDirection;
-
+	
 	for (var i = 0; i < players.length; i++) {
 	    var foodIndex = this.arrayIndexOf(player.snakeHead, players[i].foodArray);
 	    if (foodIndex > -1) {
 		players[i].foodArray.splice(foodIndex, 1);
 		if (players[i] == player) {
 		    player.addSquare = true;
+		    if (audio) {
+			sfx.eat.play('', 0, 1, false, true);
+		    }
 		}
 		else {
 		    player.score -= 5;
+		    if (audio) {
+			sfx.eat2.play('', 0, 1, false, true);
+		    }
 		}
 		this.generateFood(players[i]);
 	    }
@@ -301,7 +320,27 @@ Game.Play.prototype = {
 	}
     },
 
+    addMute: function() {
+	muteKey = game.input.keyboard.addKey(Phaser.Keyboard.M);
+	muteKey.onDown.add(
+	    function () {
+		if (audio) {
+		    music.pause();
+		}
+		else {
+		    if (music.paused) {
+			music.resume();
+		    }
+		    else {
+			music.play('', 0, 0.25, true, true);
+		    }
+		}
+		audio = !audio;
+	    }, this);
+    },
+
     endGame: function () {
+	music.stop();
 	game.state.start('Menu');
     }
 };

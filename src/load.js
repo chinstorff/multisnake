@@ -26,6 +26,15 @@ Game.Load.prototype = {
 	game.load.image('ready', 'assets/img/ready.png');
 
 	game.load.image('background', 'assets/img/background.png');
+
+	game.load.audio('music', 'assets/aud/Kick\ Shock.mp3');
+	game.load.audio('die', 'assets/aud/die.wav');
+	game.load.audio('eat', 'assets/aud/eat.wav');
+	game.load.audio('eat2', 'assets/aud/eat2.wav');
+	music = game.add.sound('music');
+	sfx.die = game.add.sound('die');
+	sfx.eat = game.add.sound('eat');
+	sfx.eat2 = game.add.sound('eat2');
     },
 
     create: function () {

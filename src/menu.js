@@ -12,6 +12,7 @@ Game.Menu.prototype = {
 
 	this.addControls(Phaser.Keyboard.W, Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D, players[0]);
 	this.addControls(Phaser.Keyboard.UP, Phaser.Keyboard.DOWN, Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT, players[1]);
+	this.addMute();
 
 	for (var i = 0; i < players.length; i++) {
 	    players[i].ready = false;
@@ -61,6 +62,10 @@ Game.Menu.prototype = {
 	if (!player.ready) {
 	    game.add.tween(player.readyText).to({ y: 316, alpha: 1 }, 200, null, true, 0, 0, false);
 	    player.ready = true;
+
+	    if (audio) {
+		sfx.eat.play('', 0, 1, false, true);
+	    }
 	    
 	    if (this.allReady()){
 		this.startGame();
@@ -72,6 +77,10 @@ Game.Menu.prototype = {
 	if (player.ready) {
 	    game.add.tween(player.readyText).to({ y: 346, alpha: 0 }, 200, null, true, 0, 0, false);
 	    player.ready = false;
+	   
+	    if (audio) {
+		sfx.eat2.play('', 0, 1, false, true);
+	    }
 	}
     },
 
@@ -159,6 +168,14 @@ Game.Menu.prototype = {
 
 		Game.Play.prototype.updateBackground();
 		this.updateText();
+	    }, this);
+    },
+
+    addMute: function () {
+	muteKey = game.input.keyboard.addKey(Phaser.Keyboard.M);
+	muteKey.onDown.add(
+	    function () {
+		audio = !audio;
 	    }, this);
     },
 

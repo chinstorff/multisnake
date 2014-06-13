@@ -24,9 +24,9 @@ Game.Play.prototype = {
 	time = game.time.now;
 	turnCount = 0;
 	
-	scoreText[0] = game.add.text(20, 300, players[0].score.toString(), { font: '50px Arial bold', fill: '#888' });
-	scoreText[1] = game.add.text(280, 300, players[1].score.toString(), { font: '50px Arial bold', fill: '#888' });
-	scoreText[1].anchor.setTo(1, 0);
+	scoreText[0] = game.add.text(135, 296, players[0].score.toString(), { font: '50px Arial bold', fill: '#888' });
+	scoreText[1] = game.add.text(165, 296, players[1].score.toString(), { font: '50px Arial bold', fill: '#888' });
+	scoreText[0].anchor.setTo(1, 0);
 
 	this.paint();				
     },
@@ -45,7 +45,6 @@ Game.Play.prototype = {
 	if (this.allDead()) {
 	    this.endGame();
 	}
-	console.log('update complete');
     },
 
     advanceTurn: function () {
@@ -150,10 +149,10 @@ Game.Play.prototype = {
 	bgLeft.scale.setTo(135 / 18, 90 / 18);
 	bgRight.scale.setTo(135 / 18, 90 / 18);
 
-	keysWasd = game.add.sprite(145, 390, 'keys-wasd');
-	keysWasd.anchor.setTo(1, 1);
-	keysArrows = game.add.sprite(155, 390, 'keys-arrows');
-	keysArrows.anchor.setTo(0, 1);
+	keysWasd = game.add.sprite(78, 390, 'keys-wasd');
+	keysWasd.anchor.setTo(0.5, 1);
+	keysArrows = game.add.sprite(300 - 78, 390, 'keys-arrows');
+	keysArrows.anchor.setTo(0.5, 1);
     },
 
     updateBackground: function () {
@@ -183,7 +182,6 @@ Game.Play.prototype = {
 	anyAlive = false;
 	for (var i = 0; i < players.length; i++) {
 	    if (players[i].alive) {
-		console.log('player ' + i + ' is alive');
 		anyAlive = true;
 	    }
 	}

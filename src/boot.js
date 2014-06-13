@@ -13,6 +13,7 @@ var players = [{}, {}];
 var Directions = { Up: 0, Right: 1, Down: 2, Left: 3 };
 
 var colors = ['blue', 'green', 'lime', 'purple', 'orange', 'pink'];
+var hexColors = ['#aaccff', '#aaffcc', '#ccffaa', '#ccaaff', '#ffccaa', '#ffaacc'];
 
 Game.Boot = function (game) { };
 

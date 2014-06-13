@@ -23,6 +23,8 @@ Game.Load.prototype = {
 	game.load.image('keys-wasd', 'assets/img/keys-wasd.png');
 	game.load.image('keys-arrows', 'assets/img/keys-arrows.png');
 
+	game.load.image('ready', 'assets/img/ready.png');
+
 	game.load.image('background', 'assets/img/background.png');
     },
 

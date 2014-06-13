@@ -59,7 +59,7 @@ Game.Menu.prototype = {
     },
 
     ready: function (player) {
-	if (!player.ready) {
+	if (!player.ready && timer === 0) {
 	    game.add.tween(player.readyText).to({ y: 316, alpha: 1 }, 200, null, true, 0, 0, false);
 	    player.ready = true;
 
@@ -74,7 +74,7 @@ Game.Menu.prototype = {
     },
 
     unready: function (player) {
-	if (player.ready) {
+	if (player.ready && timer === 0) {
 	    game.add.tween(player.readyText).to({ y: 346, alpha: 0 }, 200, null, true, 0, 0, false);
 	    player.ready = false;
 	   
@@ -145,29 +145,33 @@ Game.Menu.prototype = {
 	    }, this);
 	player.keys.left.onDown.add(
 	    function () { 
-		colorsAvailable.push(player.colorId);
-		player.colorId = (player.colorId + colors.length - 1) % colors.length;
-		while (colorsAvailable.indexOf(player.colorId) === -1) {
+		if (!player.ready) {
+		    colorsAvailable.push(player.colorId);
 		    player.colorId = (player.colorId + colors.length - 1) % colors.length;
+		    while (colorsAvailable.indexOf(player.colorId) === -1) {
+			player.colorId = (player.colorId + colors.length - 1) % colors.length;
+		    }
+		    colorsAvailable.splice(colorsAvailable.indexOf(player.colorId), 1);
+		    this.updateColor() 
+		    
+		    Game.Play.prototype.updateBackground();
+		    this.updateText();
 		}
-		colorsAvailable.splice(colorsAvailable.indexOf(player.colorId), 1);
-		this.updateColor() 
-
-		Game.Play.prototype.updateBackground();
-		this.updateText();
 	    }, this);
 	player.keys.right.onDown.add(
 	    function () { 
-		colorsAvailable.push(player.colorId);
-		player.colorId = (player.colorId + 1) % colors.length; 
-		while (colorsAvailable.indexOf(player.colorId) === -1) {
-		    player.colorId = (player.colorId + 1) % colors.length;
+		if (!player.ready) {
+		    colorsAvailable.push(player.colorId);
+		    player.colorId = (player.colorId + 1) % colors.length; 
+		    while (colorsAvailable.indexOf(player.colorId) === -1) {
+			player.colorId = (player.colorId + 1) % colors.length;
+		    }
+		    colorsAvailable.splice(colorsAvailable.indexOf(player.colorId), 1);
+		    this.updateColor();
+		    
+		    Game.Play.prototype.updateBackground();
+		    this.updateText();
 		}
-		colorsAvailable.splice(colorsAvailable.indexOf(player.colorId), 1);
-		this.updateColor();
-
-		Game.Play.prototype.updateBackground();
-		this.updateText();
 	    }, this);
     },
 

@@ -25,8 +25,14 @@ Game.Play.prototype = {
 	turnCount = 0;
 	
 	scoreText[0] = game.add.text(135, 296, players[0].score.toString(), { font: '50px Arial bold', fill: '#888' });
-	scoreText[1] = game.add.text(165, 296, players[1].score.toString(), { font: '50px Arial bold', fill: '#888' });
 	scoreText[0].anchor.setTo(1, 0);
+	scoreText[0].alpha = 0;
+	game.add.tween(scoreText[0]).to({ alpha: 1 }, 250, null, true, 0, 0, false);
+	scoreText[1] = game.add.text(165, 296, players[1].score.toString(), { font: '50px Arial bold', fill: '#888' });
+	scoreText[1].alpha = 0;
+	game.add.tween(scoreText[1]).to({ alpha: 1 }, 250, null, true, 0, 0, false);
+
+
 
 	this.paint();				
     },

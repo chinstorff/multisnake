@@ -44,14 +44,17 @@ Game.Menu.prototype = {
 
     animateEntry: function (start, end, sprite) {
 	rate = (start - end) / 7;
+	time = 150;
+	delay = 150;
+
 	game.add.tween(sprite)
-	    .to({ x: end + rate * 6 }, 200, null, true, 200, 0, false)
-	    .to({ x: end + rate * 5 }, 200, null, true, 200, 0, false)
-	    .to({ x: end + rate * 4 }, 200, null, true, 200, 0, false)
-	    .to({ x: end + rate * 3 }, 200, null, true, 200, 0, false)
-	    .to({ x: end + rate * 2 }, 200, null, true, 200, 0, false)
-	    .to({ x: end + rate * 1 }, 200, null, true, 200, 0, false)
-	    .to({ x: end + rate * 0 }, 200, null, true, 200, 0, false);	
+	    .to({ x: end + rate * 6 }, time, null, true, delay, 0, false)
+	    .to({ x: end + rate * 5 }, time, null, true, delay, 0, false)
+	    .to({ x: end + rate * 4 }, time, null, true, delay, 0, false)
+	    .to({ x: end + rate * 3 }, time, null, true, delay, 0, false)
+	    .to({ x: end + rate * 2 }, time, null, true, delay, 0, false)
+	    .to({ x: end + rate * 1 }, time, null, true, delay, 0, false)
+	    .to({ x: end + rate * 0 }, time, null, true, delay, 0, false);	
     },
 
     ready: function (player) {

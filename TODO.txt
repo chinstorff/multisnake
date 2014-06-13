@@ -1,9 +1,3 @@
-- color selection
-- score
-
 - loading screen
-- menu screen
+- instructions
 - end screen
-
-- music
-- sound effects

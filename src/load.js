@@ -3,7 +3,15 @@ Game.Load = function (game) { };
 Game.Load.prototype = {
     preload: function () {
 	// create loading screen
-	game.stage.backgroundColor = '#222222';
+	game.stage.backgroundColor = '#222';
+	frame = game.add.sprite(w/2, h/2, 'loadframe');
+	frame.anchor.setTo(0, 0.5);
+	frame.x -= frame.width / 2;
+	bar = game.add.sprite(w/2, h/2, 'loadbar');
+	bar.x -= frame.width / 2 - 5;
+	bar.anchor.setTo(0, 0.5);
+
+	game.load.setPreloadSprite(bar);
 
 	// load everything
 	game.load.image('square-green', 'assets/img/square-green.png');

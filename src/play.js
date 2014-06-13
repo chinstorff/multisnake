@@ -37,8 +37,6 @@ Game.Play.prototype = {
 	scoreText[1].alpha = 0;
 	game.add.tween(scoreText[1]).to({ alpha: 1 }, 250, null, true, 0, 0, false);
 
-
-
 	this.paint();				
     },
 
@@ -341,6 +339,6 @@ Game.Play.prototype = {
 
     endGame: function () {
 	music.stop();
-	game.state.start('Menu');
+	game.state.start('End');
     }
 };

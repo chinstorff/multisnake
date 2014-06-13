@@ -4,10 +4,13 @@ Game.Load.prototype = {
     preload: function () {
 	// create loading screen
 	game.stage.backgroundColor = '#222';
-	frame = game.add.sprite(w/2, h/2, 'loadframe');
+
+	background = game.add.sprite(0, 0, 'background');
+
+	frame = game.add.sprite(w/2, 145, 'loadframe');
 	frame.anchor.setTo(0, 0.5);
 	frame.x -= frame.width / 2;
-	bar = game.add.sprite(w/2, h/2, 'loadbar');
+	bar = game.add.sprite(w/2, 145, 'loadbar');
 	bar.x -= frame.width / 2 - 5;
 	bar.anchor.setTo(0, 0.5);
 
@@ -32,8 +35,6 @@ Game.Load.prototype = {
 	game.load.image('keys-arrows', 'assets/img/keys-arrows.png');
 
 	game.load.image('ready', 'assets/img/ready.png');
-
-	game.load.image('background', 'assets/img/background.png');
 
 	game.load.audio('music', 'assets/aud/Kick\ Shock.mp3');
 	game.load.audio('die', 'assets/aud/die.wav');

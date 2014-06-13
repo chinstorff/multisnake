@@ -23,6 +23,7 @@ Game.Boot = function (game) { };
 
 Game.Boot.prototype = {
     preload: function () {
+	game.load.image('background', 'assets/img/background.png');
 	game.load.image('loadbar', 'assets/img/loadbar.png');
 	game.load.image('loadframe', 'assets/img/loadframe.png');
     },

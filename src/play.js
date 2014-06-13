@@ -41,6 +41,11 @@ Game.Play.prototype = {
 
 	    this.paint();
 	}
+
+	if (this.allDead()) {
+	    this.endGame();
+	}
+	console.log('update complete');
     },
 
     advanceTurn: function () {
@@ -56,10 +61,6 @@ Game.Play.prototype = {
 	    }
 	}
 
-	if (this.allDead()) {
-	    this.endGame();
-	}
-	
 	turnCount++;
     },
 
@@ -182,6 +183,7 @@ Game.Play.prototype = {
 	anyAlive = false;
 	for (var i = 0; i < players.length; i++) {
 	    if (players[i].alive) {
+		console.log('player ' + i + ' is alive');
 		anyAlive = true;
 	    }
 	}

@@ -1,9 +1,11 @@
 Game.Menu = function (game) { };
 
-var colorsAvailable = [0, 1, 2, 3, 4, 5];
+var colorsAvailable;
 
 Game.Menu.prototype = {
     create: function () {
+	colorsAvailable = [0, 1, 2, 3, 4, 5];
+
 	this.generateColorIds();
 	this.updateColor();
 	
@@ -15,7 +17,6 @@ Game.Menu.prototype = {
 	for (var i = 0; i < players.length; i++) {
 	    players[i].ready = false;
 	}
-
     },
 
     update: function () {
@@ -45,13 +46,15 @@ Game.Menu.prototype = {
 
     generateColorIds: function () {
 	for (var i = 0; i < players.length; i++) {
-	    var success = false;
-	    while (!success) {
-		var rand = Math.floor(Math.random() * 6);
-		if (colorsAvailable.indexOf(rand) > -1) {
-		    players[i].colorId = rand;
-		    colorsAvailable.splice(colorsAvailable.indexOf(rand), 1);
-		    success = true;
+	    if (!players[i].color) {
+		var success = false;
+		while (!success) {
+		    var rand = Math.floor(Math.random() * 6);
+		    if (colorsAvailable.indexOf(rand) > -1) {
+			players[i].colorId = rand;
+			colorsAvailable.splice(colorsAvailable.indexOf(rand), 1);
+			success = true;
+		    }
 		}
 	    }
 	}

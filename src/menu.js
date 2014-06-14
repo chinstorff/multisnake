@@ -20,10 +20,20 @@ Game.Menu.prototype = {
 
 	title = game.add.text (-w / 2, 10, 'Multisnake', { font: '56px Arial', fill: hexColors[players[0].colorId] });
 	title.anchor.setTo(0.5, 0);
-	this.animateEntry(- w / 2, w / 2, title);
+	game.add.tween(title).to({ x: w / 2 }, 750, null, true, 0, 0, false);
 
 	by = game.add.text(w, 62, 'by Christopher Hinstorff', { font: '22px Arial', fill: hexColors[players[1].colorId] });
-	this.animateEntry(w, 50, by);
+	game.add.tween(by).to({ x: 50 }, 750, null, true, 750, 0, false);
+
+	instructions = game.add.text(w/2, 400, 'Use arrow keys or WASD\nto move your snake', { font: '22px Arial', fill: '#ccc', align: 'center' });
+	instructions.anchor.setTo(0.5, 1);
+	instructions.alpha = 0;
+	game.add.tween(instructions).to({ y: 200, alpha: 1 }, 750, null, true, 750, 0, false);
+
+	startText = game.add.text(w/2, 280, 'press UP and W to start', { font: '22px Arial', fill: '#ccc' });
+	startText.anchor.setTo(0.5, 1);
+	startText.alpha = 0;
+	game.add.tween(startText).to({ alpha: 1 }, 500, null, true, 1500, 0, false);
 
 	players[0].readyText = game.add.sprite(78, 346, 'ready');
 	players[0].readyText.anchor.setTo(0.5, 0);
@@ -43,12 +53,9 @@ Game.Menu.prototype = {
 	}
     },
 
-    animateEntry: function (start, end, sprite) {
+    animateEntry: function (start, end, sprite, delay) {
 	rate = (start - end) / 7;
 	time = 750;
-	delay = 0;
-
-	game.add.tween(sprite).to({ x: end }, time, null, true, delay, 0, false)
     },
 
     ready: function (player) {

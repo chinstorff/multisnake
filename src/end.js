@@ -31,7 +31,7 @@ Game.End.prototype = {
 	resultText.alpha = 0;
 	game.add.tween(resultText).to({ alpha: 1, fontSize: resultSize }, 250, null, true, 0, 0, false);
 
-	restartText = game.add.text(w/2, 275, "press UP or W to restart", { font: '22px Arial', fill: resultColor });
+	restartText = game.add.text(w/2, 280, "press UP or W to restart", { font: '22px Arial', fill: resultColor });
 	restartText.anchor.setTo(0.5, 1);
 	restartText.alpha = 0;
 	game.add.tween(restartText).to({ alpha: 1 }, 1000, null, true, 250, 0, false);

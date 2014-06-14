@@ -187,6 +187,8 @@ Game.Menu.prototype = {
 	timer = game.time.now;
 	game.add.tween(title).to({ alpha: 0 }, 250, null, true, 250, 0, false);
 	game.add.tween(by).to({ alpha: 0 }, 250, null, true, 250, 0, false);
+	game.add.tween(instructions).to({ alpha: 0 }, 250, null, true, 250, 0, false);
+	game.add.tween(startText).to({ alpha: 0 }, 250, null, true, 250, 0, false);
 	game.add.tween(players[0].readyText).to({ alpha: 0 }, 250, null, true, 250, 0, false);
 	game.add.tween(players[1].readyText).to({ alpha: 0 }, 250, null, true, 250, 0, false);
     }

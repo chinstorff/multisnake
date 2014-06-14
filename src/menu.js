@@ -25,10 +25,10 @@ Game.Menu.prototype = {
 	by = game.add.text(w, 62, 'by Christopher Hinstorff', { font: '22px Arial', fill: hexColors[players[1].colorId] });
 	game.add.tween(by).to({ x: 50 }, 750, null, true, 750, 0, false);
 
-	instructions = game.add.text(w/2, 400, 'Use arrow keys or WASD\nto move your snake', { font: '22px Arial', fill: '#ccc', align: 'center' });
+	instructions = game.add.text(w/2, 400, 'use arrow keys or WASD\nto move your snake\n\npress M to mute', { font: '22px Arial', fill: '#ccc', align: 'center' });
 	instructions.anchor.setTo(0.5, 1);
 	instructions.alpha = 0;
-	game.add.tween(instructions).to({ y: 200, alpha: 1 }, 750, null, true, 750, 0, false);
+	game.add.tween(instructions).to({ y: 220, alpha: 1 }, 750, null, true, 750, 0, false);
 
 	startText = game.add.text(w/2, 280, 'press W or UP when ready', { font: '22px Arial', fill: '#ccc' });
 	startText.anchor.setTo(0.5, 1);

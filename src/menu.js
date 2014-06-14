@@ -30,7 +30,7 @@ Game.Menu.prototype = {
 	instructions.alpha = 0;
 	game.add.tween(instructions).to({ y: 200, alpha: 1 }, 750, null, true, 750, 0, false);
 
-	startText = game.add.text(w/2, 280, 'press UP and W to start', { font: '22px Arial', fill: '#ccc' });
+	startText = game.add.text(w/2, 280, 'press W or UP when ready', { font: '22px Arial', fill: '#ccc' });
 	startText.anchor.setTo(0.5, 1);
 	startText.alpha = 0;
 	game.add.tween(startText).to({ alpha: 1 }, 500, null, true, 1500, 0, false);
